@@ -1,11 +1,16 @@
 import express from "express";
 import dotenv from "dotenv";
-import { showCurrentRoute } from "./middleware/showRoute.js";
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-dotenv.config();
+app.use((req, res, next) => {
+  if (process.env.DEBUG) {
+    console.log(process.env.INIT_CWD);
+  }
+  next();
+});
 
 app.get("", (req, res) => {
   res.send(`Hello SuperUsers!`);
@@ -13,7 +18,6 @@ app.get("", (req, res) => {
 
 // your code here
 
-app.use(showCurrentRoute);
 app.get("/multiply/:number", (req, res) => {
   const number = Number(req.params.number);
   res.send(`${number * process.env.MULTIPLIER}`);
